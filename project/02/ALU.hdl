@@ -34,13 +34,15 @@ CHIP ALU {
         zy, // zero the y input?
         ny, // negate the y input?
         f,  // compute out = x + y (if 1) or x & y (if 0)
-        no; // negate the out output?
+        no; // negate the out output? 
 
     OUT 
         out[16], // 16-bit output
-        zr, // 1 if (out == 0), 0 otherwise
-        ng; // 1 if (out < 0),  0 otherwise
+        zr, // 1 if (out == 0), 0 otherwise zero
+        ng; // 1 if (out < 0),  0 otherwise negative
 
     PARTS:
    // Put you code here:
+   
+   Add16(a=, b=, out=);
 }
