@@ -43,6 +43,55 @@ CHIP ALU {
 
     PARTS:
    // Put you code here:
+//    Not16(in=x, out=notx);
+//    Not16(in=y, out=noty);
+//    Mux4Way16(a=x, b=false, c=x, d=notx, sel[1]=zx,sel[0]=nx, out=x1);
+//    Mux4Way16(a=y, b=false, c=y, d=noty, sel[1]=zy,sel[0]=ny, out=y1);
+//    Add16(a=x1, b=y1, out=x1 + y1);
+//    And16(a=x1, b=y1, out=x1 & y1);
+//    Mux16(a=x1&y1, b=x1+y1, sel=f, out=out1);
+//    Not16(in=out1, out=notout1);
+//    Mux16(a=out1, b=notout1, sel=no, out=out);
+//    And(a=out[15], b=true, out=ng);
+// 一步步而不是
+    // Mux16(a=x, b=false, sel=zx, out=xafterzero);
+    // Not16(in=xafterzero, out=negatex);
+    // Mux16(a=xafterzero, b=negatex, sel=nx, out=xfaternegate);
+
+    // Mux16(a=y, b=false, sel=zy, out=yafterzero);
+    // Not16(in=yafterzero, out=negatey);
+    // Mux16(a=yafterzero, b=negatey, sel=ny, out=yafternegate);
+
+    // And16(a=xfaternegate, b=yafternegate, out=andxy);
+    // Add16(a=xfaternegate, b=yafternegate, out=addxy);
+
+    // Mux16(a=andxy, b=addxy, sel=f, out=tmpout);
+    // Not16(in=tmpout, out=negateout);
+
+    // Mux16(a=tmpout, b=negateout, sel=no, out=out,out[0..7]=firsthalf,out[8..15]=lasthalf,out[15]=ng);
+    // Or8Way(in=firsthalf, out=or1);
+    // Or8Way(in=lasthalf, out=or2);
+    // Or(a=or1, b=or2, out=notzr);
+    // Not(in=notzr, out=zr);
+
+    Mux16(a=x, b=false, sel=zx, out=xAfterZero);
+   Not16(in=xAfterZero, out=negateX);
+   Mux16(a=xAfterZero, b=negateX, sel=nx, out=xAfterNegate);
    
-   Add16(a=, b=, out=);
+   Mux16(a=y, b=false, sel=zy, out=yAfterZero);
+   Not16(in=yAfterZero, out=negateY);
+   Mux16(a=yAfterZero, b=negateY, sel=ny, out=yAfterNegate);
+   
+   And16(a=xAfterNegate, b=yAfterNegate, out=andXY);
+   Add16(a=xAfterNegate, b=yAfterNegate, out=sumXY);
+   
+   Mux16(a=andXY, b=sumXY, sel=f, out=tempOut);
+   Not16(in=tempOut, out=negateOut);
+   
+   Mux16(a=tempOut, b=negateOut, sel=no, out=out, out[0..7]=firstHalfOut, out[8..15]=lastHalfOut, out[15]=ng);
+   Or8Way(in=firstHalfOut, out=or1);
+   Or8Way(in=lastHalfOut, out=or2);
+   Or(a=or1, b=or2, out=notZr);
+   Not(in=notZr, out=zr);
+
 }
